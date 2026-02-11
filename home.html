@@ -1,0 +1,2650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Real Estate</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{color:#111}
+
+/* ================= HEADER ================= */
+header{
+ position:fixed;top:0;width:100%;z-index:1000;
+ display:flex;justify-content:space-between;align-items:center;
+ padding:16px 48px;background:#fff
+}
+.logo{
+  display:flex;
+  align-items:center;
+}
+
+.logo img{
+  height:68px;          /* ⬅ BIG & CLEAR */
+  width:auto;
+  max-height:none;      /* remove browser limits */
+  transform: scale(1.1);/* boosts visual weight */
+}
+
+
+
+nav ul{display:flex;gap:32px;list-style:none}
+nav li{position:relative}
+nav a{text-decoration:none;color:#111;font-weight:500}
+
+/* DROPDOWN */
+.dropdown-menu{
+ position:absolute;top:36px;left:0;background:#fff;
+ box-shadow:0 10px 40px rgba(0,0,0,.12);
+ display:none
+}
+.dropdown:hover .dropdown-menu{display:block}
+.dropdown-menu a{display:block;padding:12px 24px}
+
+/* HEADER RIGHT */
+.header-right{display:flex;gap:20px;align-items:center}
+.phone{font-weight:500}
+.btn-outline{
+ border:2px solid #d4a93c;background:none;color:#d4a93c;
+ padding:10px 18px;font-weight:600
+}
+
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer}
+.hamburger span{width:22px;height:2px;background:#111}
+
+/* ================= HERO (UNCHANGED) ================= */
+.hero{height:100vh;position:relative}
+.bg-video{width:100%;height:100%;object-fit:cover}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.hero-inner{
+ position:absolute;top:52%;left:50%;
+ transform:translate(-50%,-50%);
+ text-align:center;color:#fff;width:100%
+}
+.hero-inner h1{font-size:64px;font-weight:600}
+.hero-inner p{margin-top:12px;font-size:18px}
+
+/* TABS */
+.tabs{margin:36px 0 18px;display:flex;justify-content:center}
+.tabs button{
+ padding:14px 34px;
+ background:#fff;
+ border:none;
+ font-weight:600;
+ cursor:pointer
+}
+.tabs button.active{
+ background:#d4a93c;
+ color:#fff
+}
+
+/* SEARCH (SAME FOR ALL TABS) */
+.search-bar{
+ max-width:1100px;margin:auto;background:#fff;padding:22px;
+ display:flex;gap:12px;box-shadow:0 20px 50px rgba(0,0,0,.2)
+}
+.search-bar input,.search-bar select{
+ padding:14px;border:1px solid #ddd;width:100%
+}
+.btn-gold{
+ background:#d4a93c;border:none;color:#fff;
+ padding:14px 24px;font-weight:700
+}
+
+/* STATS */
+.stats{
+ background:#111;color:#d4a93c;
+ display:flex;justify-content:space-around;
+ padding:70px 20px
+}
+.stats h2{font-size:56px}
+.stats p{color:#ccc;margin-top:6px}
+
+/* ================= FULLSCREEN MOBILE MENU ================= */
+.mobile-menu{
+ position:fixed;
+ inset:0;
+ background:#fff;
+ z-index:3000;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ opacity:0;
+ pointer-events:none;
+ transition:.4s;
+}
+
+.mobile-menu.active{
+ opacity:1;
+ pointer-events:auto;
+}
+
+.mobile-menu .close{
+ position:absolute;
+ top:30px;
+ right:30px;
+ font-size:28px;
+ cursor:pointer;
+}
+
+.mobile-menu ul{
+ list-style:none;
+ text-align:center;
+}
+
+.mobile-menu li{
+ margin:18px 0;
+ font-size:22px;
+ font-weight:600;
+ cursor:pointer;
+}
+
+/* HAMBURGER DROPDOWN */
+.mobile-dropdown{
+ display:none;
+ margin-top:10px;
+}
+.mobile-dropdown a{
+ display:block;
+ font-size:18px;
+ margin:10px 0;
+ color:#444;
+ text-decoration:none;
+}
+
+.mobile-menu a{text-decoration:none;color:#111}
+
+/* BOTTOM INFO */
+.menu-bottom{
+ position:absolute;
+ bottom:30px;
+ text-align:center;
+}
+.menu-bottom p{margin:6px 0;font-size:14px}
+.menu-bottom .social{
+ display:flex;justify-content:center;
+ gap:18px;margin-top:12px;font-size:20px
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+ nav{display:none}
+ .hamburger{display:flex}
+ .search-bar{flex-direction:column}
+ .hero-inner h1{font-size:44px}
+ .phone{display:none} /* ✅ hide phone on mobile */
+}
+/* FLOATING ACTION BUTTONS (DESKTOP ONLY) */
+.floating-actions{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  z-index:2500;
+}
+
+.floating-actions a{
+  text-decoration:none;
+  font-weight:600;
+  padding:14px 28px;
+  border-radius:6px;
+  font-size:16px;
+  text-align:center;
+}
+
+.demo-btn{
+  background:#2f3f4d;
+  color:#fff;
+  border:2px solid #fff;
+}
+
+.buy-btn{
+  background:#8bc34a;
+  color:#fff;
+}
+
+/* HIDE ON MOBILE */
+@media(max-width:900px){
+  .floating-actions{display:none;}
+}
+/* HERO STATS ON VIDEO */
+.hero-stats{
+  position:absolute;
+  bottom:-130px;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:1100px;
+  display:flex;
+  justify-content:space-between;
+  text-align:center;
+  color:#d4a93c;
+}
+
+.hero-stats h2{
+  font-size:54px;
+  font-weight:500;
+}
+
+.hero-stats p{
+  color:#e0e0e0;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-top:6px;
+}
+
+/* MOBILE STACK */
+@media(max-width:900px){
+  .hero-stats{
+    position:static;
+    transform:none;
+    margin-top:40px;
+    flex-direction:column;
+    gap:24px;
+  }
+}
+
+/* EXTRA SPACING – MOBILE ONLY */
+@media (max-width: 900px) {
+
+  /* more space below fixed header */
+  body{
+    padding-top: 130px;
+  }
+
+  /* push hero content down */
+  .hero-inner{
+    top: 56%;              /* was 52% */
+    padding: 0 16px;
+  }
+
+  /* heading spacing */
+  .hero-inner h1{
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  .hero-inner p{
+    margin-bottom: 22px;
+  }
+
+  /* tabs spacing */
+  .tabs{
+    margin-top: 26px;
+    margin-bottom: 22px;
+  }
+
+  /* search box spacing */
+  .search-bar{
+    margin-top: 18px;
+    padding: 26px 20px;
+  }
+
+}
+
+
+
+</style>
+</head>
+
+<body>
+<!-- FLOATING ACTION BUTTONS -->
+<div class="floating-actions">
+  <a href="404.html" class="demo-btn">Try free demo</a>
+  <a href="404.html" class="buy-btn">Buy MyHome</a>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <a href="index.html"><img src="logo.webp"></a>
+  </div>
+
+  <nav>
+    <ul>
+      <li class="dropdown">
+        <a href="">Home <i class="fa fa-angle-down"></i></a>
+        <div class="dropdown-menu">
+          <a href="404.html">Home 2</a>
+        </div>
+      </li>
+      <li><a href="404.html">Demos</a></li>
+      <li><a href="404.html">Search</a></li>
+      <li><a href="404.html">Listing</a></li>
+      <li><a href="404.html">Pages</a></li>
+    </ul>
+  </nav>
+
+  <div class="header-right">
+    <span class="phone">📞+91 70107 92745</span>
+    <a href="404.html"><button class="btn-outline">PRIVATE CONSULTATION</button></a>
+    <div class="hamburger" onclick="openMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <video autoplay muted loop class="bg-video">
+    <source src="bg.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+
+  <div class="hero-inner">
+    <h1>Where Luxury Meets Legacy</h1>
+    <p>Curated collection of the world’s finest residences</p>
+
+    <div class="tabs">
+      <button class="active">ALL</button>
+      <button>FOR SALE</button>
+      <button>FOR RENT</button>
+    </div>
+
+    <!-- SAME SEARCH BOX FOR ALL -->
+    <div class="search-bar">
+      <select><option>Location</option></select>
+      <select><option>Property Type</option></select>
+      <input placeholder="Min Price">
+      <input placeholder="Max Price">
+      <a href="404.html"><button class="btn-gold">VIEW PROPERTIES</button></a>
+    </div>
+<!-- HERO STATS ON VIDEO -->
+<div class="hero-stats">
+  <div>
+    <h2>2.5B+</h2>
+    <p>PORTFOLIO VALUE</p>
+  </div>
+  <div>
+    <h2>850+</h2>
+    <p>TRANSACTIONS CLOSED</p>
+  </div>
+  <div>
+    <h2>20</h2>
+    <p>YEARS ACTIVE</p>
+  </div>
+</div>
+</div>
+</section>
+<!-- FULLSCREEN MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="close" onclick="closeMenu()">✕</div>
+
+  <ul>
+    <li onclick="toggleHome()">Home ▾
+      <div class="mobile-dropdown" id="homeDrop">
+        <a href="404.html">Home 2</a>
+      </div>
+    </li>
+    <li><a href="404.html">Demos</a></li>
+    <li><a href="404.html">Search</a></li>
+    <li><a href="404.html">Listing</a></li>
+    <li><a href="404.html">Pages</a></li>
+  </ul>
+
+  <div class="menu-bottom">
+    <p><b>Email</b> – support@stackly.com</p>
+    <div class="social">
+      <a href="404.html"><i class="fab fa-facebook"></i></a>
+      <a href="404.html"><i class="fab fa-x-twitter"></i></a>
+      <a href="404.html"><i class="fab fa-instagram"></i></a>
+      <a href="404.html"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* MOBILE MENU */
+function openMenu(){
+ document.getElementById("mobileMenu").classList.add("active");
+}
+function closeMenu(){
+ document.getElementById("mobileMenu").classList.remove("active");
+}
+
+/* HAMBURGER HOME DROPDOWN */
+function toggleHome(){
+ document.getElementById("homeDrop").classList.toggle("active");
+ document.getElementById("homeDrop").style.display =
+  document.getElementById("homeDrop").style.display === "block" ? "none" : "block";
+}
+
+/* TAB ACTIVE (SAME SEARCH BOX) */
+document.querySelectorAll(".tabs button").forEach(btn=>{
+ btn.onclick=()=>{
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+ }
+});
+
+/* COUNTERS */
+document.querySelectorAll("[data-count]").forEach(el=>{
+ let t=+el.dataset.count,c=0,i=t/120;
+ let x=setInterval(()=>{
+  c+=i;
+  if(c>=t){
+   el.innerText=t>=1e9?"2.5B+":t+"+";
+   clearInterval(x);
+  }else el.innerText=Math.floor(c);
+ },20);
+});
+
+/* GSAP */
+gsap.from("header",{y:-60,opacity:0,duration:1});
+gsap.from(".hero-inner h1",{y:40,opacity:0,duration:1});
+gsap.from(".hero-inner p",{y:20,opacity:0,delay:.3});
+gsap.from(".tabs",{opacity:0,y:20,delay:.6});
+gsap.from(".search-bar",{opacity:0,y:30,delay:.9});
+</script>
+
+<section class="advantage">
+  <div class="advantage-head">
+    <h2>Our Advantage</h2>
+    <p>Experience world-class service with proven results and unmatched market expertise.</p>
+  </div>
+
+  <div class="advantage-grid">
+    <div class="adv-card">
+      <i class="fa-solid fa-globe"></i>
+      <h4>GLOBAL REACH</h4>
+      <p>
+        Connect with qualified buyers and sellers through our global network of certified luxury real estate experts.
+      </p>
+    </div>
+
+    <div class="adv-card">
+      <i class="fa-regular fa-star"></i>
+      <h4>EXCLUSIVE PORTFOLIO</h4>
+      <p>
+        Discover exclusive estates starting from two million dollars in the most coveted locations across the world.
+      </p>
+    </div>
+
+    <div class="adv-card">
+      <i class="fa-solid fa-award"></i>
+      <h4>EXPERT GUIDANCE</h4>
+      <p>
+        Work with certified luxury agents who provide discreet and tailored service for each unique client.
+      </p>
+    </div>
+  </div>
+</section>
+<style>
+  /* OUR ADVANTAGE */
+.advantage{
+  padding:120px 20px;
+  background:#fff;
+  text-align:center;
+}
+
+.advantage-head h2{
+  font-size:48px;
+  font-weight:500;
+  margin-bottom:12px;
+}
+
+.advantage-head p{
+  max-width:720px;
+  margin:0 auto 80px;
+  font-size:18px;
+  color:#555;
+}
+
+.advantage-grid{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:80px;
+}
+
+.adv-card{
+  opacity:0;
+  transform:translateY(40px);
+  transition:transform .4s ease, box-shadow .4s ease;
+}
+
+.adv-card i{
+  font-size:46px;
+  color:#d4a93c;
+  margin-bottom:24px;
+  display:inline-block;
+  transition:transform .4s ease, filter .4s ease;
+}
+
+.adv-card h4{
+  letter-spacing:3px;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.adv-card p{
+  color:#666;
+  font-size:16px;
+  line-height:1.7;
+}
+
+/* HOVER EFFECT */
+.adv-card:hover{
+  transform:translateY(-10px);
+}
+
+.adv-card:hover i{
+  transform:scale(1.15) rotate(-3deg);
+  filter:drop-shadow(0 0 8px rgba(212,169,60,.5));
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .advantage-grid{
+    grid-template-columns:1fr;
+    gap:50px;
+  }
+}
+
+</style>
+<script>
+  gsap.to(".adv-card",{
+  scrollTrigger:{
+    trigger:".advantage",
+    start:"top 75%"
+  },
+  opacity:1,
+  y:0,
+  duration:1,
+  stagger:.25,
+  ease:"power3.out"
+});
+
+gsap.from(".advantage-head h2",{
+  scrollTrigger:{
+    trigger:".advantage",
+    start:"top 80%"
+  },
+  opacity:0,
+  y:30,
+  duration:1
+});
+
+gsap.from(".advantage-head p",{
+  scrollTrigger:{
+    trigger:".advantage",
+    start:"top 80%"
+  },
+  opacity:0,
+  y:20,
+  delay:.2,
+  duration:1
+});
+
+</script>
+<section class="exclusive">
+  <div class="exclusive-head">
+    <h2>Exclusive Listings</h2>
+    <p>Browse exclusive homes in the world’s most prestigious and coveted locations.</p>
+  </div>
+
+  <div class="listing-grid">
+
+    <!-- CARD 1 -->
+    <div class="listing-card">
+      <div class="img-wrap slider">
+        <button class="nav prev">&#10094;</button>
+        <img src="11 (1).webp" class="slide active">
+        <img src="16.webp" class="slide">
+        <img src="15.webp" class="slide">
+        <button class="nav next">&#10095;</button>
+        <span class="tag gold">FEATURED</span>
+        <span class="tag green">FOR SALE</span>
+      </div>
+      <div class="card-body">
+        <h4>Contemporary Hill Villa</h4>
+        <p class="location">📍 New York, NY, USA</p>
+        <div class="price">$9,000,000</div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="listing-card">
+      <div class="img-wrap slider">
+        <button class="nav prev">&#10094;</button>
+        <img src="12.webp" class="slide active">
+        <img src="13(1).webp" class="slide">
+        <img src="14(1).webp" class="slide">
+        <button class="nav next">&#10095;</button>
+        <span class="tag blue">FOR RENT</span>
+      </div>
+      <div class="card-body">
+        <h4>Elegant Family Estate</h4>
+        <p class="location">📍 Los Angeles, CA</p>
+        <div class="price">$30,000 / month</div>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="listing-card">
+      <div class="img-wrap slider">
+        <button class="nav prev">&#10094;</button>
+        <img src="13 (1).webp" class="slide active">
+        <img src="16.webp" class="slide">
+        <img src="15.webp" class="slide">
+        <button class="nav next">&#10095;</button>
+        <span class="tag maroon">SOLD</span>
+      </div>
+      <div class="card-body">
+        <h4>Poolside Residence</h4>
+        <p class="location">📍 London, UK</p>
+        <div class="price">$7,000,000</div>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="listing-card">
+      <div class="img-wrap slider">
+        <button class="nav prev">&#10094;</button>
+        <img src="16.webp" class="slide active">
+        <img src="12.webp" class="slide">
+        <img src="15.webp" class="slide">
+        <button class="nav next">&#10095;</button>
+        <span class="tag green">FOR SALE</span>
+      </div>
+      <div class="card-body">
+        <h4>Luxury Beachfront Villa</h4>
+        <p class="location">📍 Miami, FL</p>
+        <div class="price">$5,500,000</div>
+      </div>
+    </div>
+
+    <!-- CARD 5 -->
+    <div class="listing-card">
+      <div class="img-wrap slider">
+        <button class="nav prev">&#10094;</button>
+        <img src="15.webp" class="slide active">
+        <img src="13(1).webp" class="slide">
+        <img src="14(1).webp" class="slide">
+        <button class="nav next">&#10095;</button>
+        <span class="tag blue">FOR RENT</span>
+      </div>
+      <div class="card-body">
+        <h4>Modern City Penthouse</h4>
+        <p class="location">📍 Dubai, UAE</p>
+        <div class="price">$18,000 / month</div>
+      </div>
+    </div>
+
+    <!-- CARD 6 -->
+    <div class="listing-card">
+      <div class="img-wrap slider">
+        <button class="nav prev">&#10094;</button>
+        <img src="16.webp" class="slide active">
+        <img src="11(1).webp" class="slide">
+        <img src="14(1).webp" class="slide">
+        <button class="nav next">&#10095;</button>
+        <span class="tag gold">FEATURED</span>
+      </div>
+      <div class="card-body">
+        <h4>Private Mountain Retreat</h4>
+        <p class="location">📍 Aspen, CO</p>
+        <div class="price">$11,200,000</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="view-all-wrap">
+    <a href="404.html" class="view-all-btn">VIEW ALL</a>
+  </div>
+</section>
+
+<style>
+ .exclusive{padding:120px 20px;background:#fafafa;}
+.exclusive-head{text-align:center;margin-bottom:70px;}
+
+.listing-grid{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:32px;
+}
+
+@media(max-width:900px){
+  .listing-grid{grid-template-columns:1fr;}
+}
+
+.listing-card{
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 15px 40px rgba(0,0,0,.1);
+}
+
+.img-wrap{
+  position:relative;
+  height:260px;
+  overflow:hidden;
+  touch-action:pan-y;
+}
+
+.slide{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:.4s ease;
+}
+.slide.active{opacity:1;}
+
+.nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:#fff;
+  border:none;
+  width:38px;
+  height:38px;
+  cursor:pointer;
+  z-index:5;
+}
+.prev{left:12px;}
+.next{right:12px;}
+
+.tag{
+  position:absolute;
+  top:16px;
+  left:16px;
+  padding:6px 14px;
+  font-size:12px;
+  color:#fff;
+}
+.tag + .tag{right:16px;left:auto;}
+
+.tag.green{background:#4f7f6b}
+.tag.gold{background:#d4a93c}
+.tag.blue{background:#3c5870}
+.tag.maroon{background:#6d2c2c}
+
+.card-body{padding:24px;}
+
+.view-all-wrap{
+  display:flex;
+  justify-content:center;
+  margin-top:60px;
+}
+
+.view-all-btn{
+  background:#d4a93c;
+  color:#fff;
+  padding:16px 48px;
+  text-decoration:none;
+}
+
+</style>
+
+<script>
+document.querySelectorAll(".slider").forEach(slider=>{
+  const slides = slider.querySelectorAll(".slide");
+  let index = 0;
+
+  const show = i =>{
+    slides.forEach(s=>s.classList.remove("active"));
+    slides[i].classList.add("active");
+  };
+
+  slider.querySelector(".next").onclick=()=>{
+    index=(index+1)%slides.length; show(index);
+  };
+
+  slider.querySelector(".prev").onclick=()=>{
+    index=(index-1+slides.length)%slides.length; show(index);
+  };
+
+  // MOBILE SWIPE
+  let startX=0;
+  slider.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+  slider.addEventListener("touchend",e=>{
+    let endX=e.changedTouches[0].clientX;
+    if(startX-endX>50) slider.querySelector(".next").click();
+    if(endX-startX>50) slider.querySelector(".prev").click();
+  });
+});
+</script>
+
+<section class="locations">
+  <div class="locations-head">
+    <h2>Top Locations</h2>
+    <p>Discover prestigious addresses offering unparalleled lifestyle and timeless value.</p>
+  </div>
+
+  <div class="locations-grid">
+
+    <!-- LEFT BIG CARD -->
+    <a href="404.html" class="location-card large">
+      <img src="21.webp" alt="">
+      <div class="overlay"></div>
+      <div class="content">
+        <h3>Manhattan</h3>
+        <span>21 Listings</span>
+      </div>
+    </a>
+
+    <!-- RIGHT SMALL CARDS -->
+    <a href="404.html" class="location-card">
+      <img src="22.webp" alt="">
+      <div class="overlay"></div>
+      <div class="content">
+        <h3>Brooklyn</h3>
+        <span>22 Listings</span>
+      </div>
+    </a>
+
+    <a href="404.html" class="location-card">
+      <img src="23.webp" alt="">
+      <div class="overlay"></div>
+      <div class="content">
+        <h3>Queens</h3>
+        <span>22 Listings</span>
+      </div>
+    </a>
+
+    <a href="404.html" class="location-card">
+      <img src="24.webp" alt="">
+      <div class="overlay"></div>
+      <div class="content">
+        <h3>Bronx</h3>
+        <span>22 Listings</span>
+      </div>
+    </a>
+
+    <a href="404.html" class="location-card">
+      <img src="25.webp" alt="">
+      <div class="overlay"></div>
+      <div class="content">
+        <h3>Staten Island</h3>
+        <span>19 Listings</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<style>
+  .locations{
+  padding:120px 20px;
+  background:#fff;
+}
+
+.locations-head{
+  text-align:center;
+  margin-bottom:80px;
+}
+
+.locations-head h2{
+  font-size:48px;
+  font-weight:500;
+  margin-bottom:12px;
+}
+
+.locations-head p{
+  font-size:18px;
+  color:#555;
+}
+
+/* GRID */
+.locations-grid{
+  max-width:1300px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  grid-template-rows:repeat(2,260px);
+  gap:28px;
+}
+
+/* CARD */
+.location-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:4px;
+  display:block;
+}
+
+.location-card.large{
+  grid-row:1 / span 2;
+}
+
+/* IMAGE */
+.location-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .7s ease;
+}
+
+/* OVERLAY */
+.location-card .overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,.65),
+    rgba(0,0,0,.15)
+  );
+}
+
+/* TEXT */
+.location-card .content{
+  position:absolute;
+  bottom:24px;
+  left:24px;
+  color:#fff;
+}
+
+.location-card h3{
+  font-size:26px;
+  font-weight:500;
+  margin-bottom:6px;
+}
+
+.location-card span{
+  font-size:13px;
+  letter-spacing:2px;
+  color:#d4a93c;
+  text-transform:uppercase;
+}
+
+/* HOVER */
+.location-card:hover img{
+  transform:scale(1.08);
+}
+
+.location-card:hover{
+  box-shadow:0 30px 80px rgba(0,0,0,.25);
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+  .locations-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+  }
+
+  .location-card.large{
+    grid-row:auto;
+    height:320px;
+  }
+
+  .location-card{
+    height:260px;
+  }
+}
+
+</style>
+<script>
+gsap.from(".location-card",{
+  scrollTrigger:{
+    trigger:".locations",
+    start:"top 75%"
+  },
+  y:40,
+  opacity:0,
+  duration:1,
+  stagger:.15,
+  ease:"power3.out"
+});
+</script>
+
+<section class="premium-sales">
+  <div class="premium-head">
+    <h2>Premium Property Sales</h2>
+    <p>Your luxury home deserves more than a listing.</p>
+  </div>
+
+  <div class="premium-grid">
+
+    <!-- LEFT CONTENT -->
+    <div class="premium-left">
+      <h3>Strategic Market Positioning</h3>
+      <p class="desc">
+        We connect exceptional properties with qualified buyers through our
+        exclusive international network. Every detail is crafted to showcase
+        your home’s unique value.
+      </p>
+
+      <ul class="features">
+        <li>
+          <span>📸</span>
+          <div>
+            <strong>SIGNATURE PHOTOGRAPHY</strong>
+            <p>Award-winning visual presentation & cinematic tours</p>
+          </div>
+        </li>
+        <li>
+          <span>🌍</span>
+          <div>
+            <strong>GLOBAL EXPOSURE</strong>
+            <p>Active buyers in 50+ premium markets worldwide</p>
+          </div>
+        </li>
+        <li>
+          <span>📊</span>
+          <div>
+            <strong>MARKET INTELLIGENCE</strong>
+            <p>Data-driven pricing strategies for optimal returns</p>
+          </div>
+        </li>
+        <li>
+          <span>⭐</span>
+          <div>
+            <strong>PRIVATE VIEWINGS</strong>
+            <p>Curated experiences for qualified clients</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- RIGHT STATS -->
+    <div class="premium-right">
+      <h4>Proven Performance</h4>
+      <p class="sub">PROPERTIES SELL 40% FASTER THAN MARKET AVERAGE</p>
+
+      <div class="stats">
+        <div>
+          <span class="count" data-target="2.5" data-suffix="B+">$0</span>
+          <p>TOTAL SALES VOLUME</p>
+        </div>
+        <div>
+          <span class="count" data-target="95" data-suffix="%">0%</span>
+          <p>LIST PRICE ACHIEVED</p>
+        </div>
+      </div>
+
+      <a href="404.html" class="gold-btn">GET PROPERTY VALUATION</a>
+    </div>
+
+  </div>
+</section>
+<style>
+.premium-sales{
+  padding:120px 20px;
+  background:#fafafa;
+}
+
+.premium-head{
+  text-align:center;
+  margin-bottom:90px;
+}
+
+.premium-head h2{
+  font-size:48px;
+  font-weight:500;
+}
+
+.premium-head p{
+  font-size:18px;
+  color:#555;
+  margin-top:10px;
+}
+
+.premium-grid{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:80px;
+}
+
+/* LEFT */
+.premium-left h3{
+  font-size:36px;
+  margin-bottom:20px;
+}
+
+.desc{
+  font-size:17px;
+  color:#555;
+  margin-bottom:40px;
+  line-height:1.7;
+}
+
+.features{
+  list-style:none;
+}
+
+.features li{
+  display:flex;
+  gap:18px;
+  margin-bottom:28px;
+}
+
+.features span{
+  font-size:22px;
+  color:#d4a93c;
+}
+
+.features strong{
+  font-size:13px;
+  letter-spacing:2px;
+}
+
+.features p{
+  font-size:14px;
+  color:#666;
+  margin-top:6px;
+}
+
+/* RIGHT */
+.premium-right{
+  background:#fff;
+  padding:60px;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+  text-align:center;
+}
+
+.premium-right h4{
+  font-size:28px;
+  color:#d4a93c;
+  margin-bottom:12px;
+}
+
+.sub{
+  font-size:12px;
+  letter-spacing:2px;
+  color:#555;
+  margin-bottom:50px;
+}
+
+.stats{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:50px;
+}
+
+.stats span{
+  font-size:48px;
+  color:#d4a93c;
+  font-weight:500;
+}
+
+.stats p{
+  font-size:12px;
+  letter-spacing:2px;
+  color:#777;
+  margin-top:8px;
+}
+
+.gold-btn{
+  display:inline-block;
+  background:#d4a93c;
+  color:#fff;
+  padding:16px 40px;
+  text-decoration:none;
+  font-weight:600;
+  letter-spacing:2px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .premium-grid{
+    grid-template-columns:1fr;
+    gap:60px;
+  }
+  .stats{
+    flex-direction:column;
+    gap:30px;
+  }
+}
+</style>
+<script>
+const counters = document.querySelectorAll(".count");
+
+const runCounter = entry => {
+  if(!entry.isIntersecting) return;
+
+  const el = entry.target;
+  const target = parseFloat(el.dataset.target);
+  const suffix = el.dataset.suffix || "";
+  let current = 0;
+  const speed = 40;
+
+  const update = () => {
+    current += target / speed;
+    if(current >= target){
+      el.textContent = (suffix.includes("B") ? "$" : "") + target + suffix;
+    }else{
+      el.textContent =
+        (suffix.includes("B") ? "$" : "") +
+        (suffix.includes("B") ? current.toFixed(1) : Math.floor(current)) +
+        suffix;
+      requestAnimationFrame(update);
+    }
+  };
+
+  update();
+  observer.unobserve(el);
+};
+
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(runCounter);
+},{threshold:.6});
+
+counters.forEach(c=>observer.observe(c));
+</script>
+
+<section class="exclusive-services">
+  <div class="services-head">
+    <h2>Exclusive Services</h2>
+    <p>Your luxury property deserves strategic marketing and exceptional global exposure.</p>
+  </div>
+
+  <div class="services-grid">
+
+    <!-- LEFT CONTENT -->
+    <div class="services-content">
+      <h3>Premium Home Preparation</h3>
+
+      <p class="intro">
+        We elevate your property into a market-ready masterpiece.
+        All preparation costs are fully covered upfront. You pay only
+        after a successful closing.*
+      </p>
+
+      <ul class="checklist">
+        <li>Professional interior design</li>
+        <li>Luxury furniture & curated art</li>
+        <li>Refined landscaping</li>
+        <li>Exclusive photography tours</li>
+      </ul>
+
+      <a href="404.html" class="outline-btn">EXPLORE MORE</a>
+
+      <p class="note">
+        *Services and terms may vary by location.<br>
+        Contact us for details.
+      </p>
+    </div>
+
+    <!-- RIGHT IMAGES -->
+    <div class="services-images">
+
+      <div class="img-box">
+        <img src="bf.webp" alt="">
+        <span class="label">BEFORE STAGING</span>
+      </div>
+
+      <div class="img-box">
+        <img src="af.webp" alt="">
+        <span class="label">AFTER STAGING</span>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+<style>
+  .exclusive-services{
+  padding:120px 20px;
+  background:#fff;
+}
+
+.services-head{
+  text-align:center;
+  margin-bottom:80px;
+}
+
+.services-head h2{
+  font-size:48px;
+  font-weight:500;
+}
+
+.services-head p{
+  font-size:18px;
+  color:#555;
+  margin-top:12px;
+}
+
+/* GRID */
+.services-grid{
+  max-width:1300px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1.1fr 1.4fr;
+  gap:40px;
+  align-items:stretch;
+}
+
+/* LEFT PANEL */
+.services-content{
+  background:#1c1c1a;
+  color:#fff;
+  padding:60px;
+  display:flex;
+  flex-direction:column;
+}
+
+.services-content h3{
+  font-size:34px;
+  margin-bottom:24px;
+}
+
+.intro{
+  font-size:16px;
+  line-height:1.7;
+  color:#ddd;
+  margin-bottom:36px;
+}
+
+.checklist{
+  list-style:none;
+  margin-bottom:40px;
+}
+
+.checklist li{
+  position:relative;
+  padding-left:28px;
+  margin-bottom:14px;
+  font-size:15px;
+}
+
+.checklist li::before{
+  content:"✔";
+  position:absolute;
+  left:0;
+  color:#d4a93c;
+  font-weight:bold;
+}
+
+.outline-btn{
+  display:inline-block;
+  padding:14px 34px;
+  border:2px solid #d4a93c;
+  color:#d4a93c;
+  text-decoration:none;
+  letter-spacing:2px;
+  font-weight:600;
+  width:max-content;
+  margin-bottom:30px;
+}
+
+.note{
+  font-size:12px;
+  color:#aaa;
+  margin-top:auto;
+}
+
+/* RIGHT IMAGES */
+.services-images{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+.img-box{
+  position:relative;
+  overflow:hidden;
+}
+
+.img-box img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.label{
+  position:absolute;
+  bottom:24px;
+  left:24px;
+  background:#fff;
+  color:#111;
+  font-size:12px;
+  letter-spacing:2px;
+  padding:8px 16px;
+  font-weight:600;
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+  .services-grid{
+    grid-template-columns:1fr;
+  }
+
+  .services-images{
+    grid-template-columns:1fr;
+  }
+
+  .img-box{
+    height:260px;
+  }
+}
+
+</style>
+
+<section class="heritage">
+  <div class="heritage-head">
+    <h2>Our Heritage</h2>
+    <p>We connect sophisticated buyers with the finest properties available.</p>
+  </div>
+
+  <div class="heritage-grid">
+
+    <!-- LEFT IMAGE -->
+    <div class="heritage-image">
+      <img src="12.webp" alt="Luxury Property View">
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="heritage-content">
+      <h3>Established Excellence</h3>
+
+      <p class="intro">
+        With unparalleled market expertise, we transform your property dreams
+        into prestigious addresses and lasting investments.
+      </p>
+
+      <div class="quote">
+        <p>
+          “Excellence isn’t just our standard—it’s our promise.
+          Every client deserves a bespoke experience tailored
+          to their unique vision.”
+        </p>
+        <span>— Michael Harrison, Founder & CEO</span>
+      </div>
+
+      <p class="closing">
+        From exclusive listings to private viewings, we orchestrate every
+        detail with discretion and sophistication.
+      </p>
+
+      <a href="404.html" class="gold-btn">SCHEDULE CONSULTATION</a>
+    </div>
+
+  </div>
+</section>
+<style>
+.heritage{
+  padding:120px 20px;
+  background:#fff;
+}
+
+.heritage-head{
+  text-align:center;
+  margin-bottom:90px;
+}
+
+.heritage-head h2{
+  font-size:48px;
+  font-weight:500;
+}
+
+.heritage-head p{
+  font-size:18px;
+  color:#555;
+  margin-top:10px;
+}
+
+/* GRID */
+.heritage-grid{
+  max-width:1300px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:80px;
+  align-items:center;
+}
+
+/* IMAGE */
+.heritage-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* CONTENT */
+.heritage-content h3{
+  font-size:38px;
+  font-weight:500;
+  margin-bottom:24px;
+}
+
+.intro{
+  font-size:17px;
+  color:#555;
+  line-height:1.7;
+  margin-bottom:36px;
+}
+
+/* QUOTE */
+.quote{
+  border-left:4px solid #d4a93c;
+  padding-left:26px;
+  margin-bottom:36px;
+}
+
+.quote p{
+  font-size:18px;
+  font-style:italic;
+  color:#222;
+  line-height:1.6;
+}
+
+.quote span{
+  display:block;
+  margin-top:14px;
+  font-size:14px;
+  color:#777;
+}
+
+/* CLOSING */
+.closing{
+  font-size:16px;
+  color:#555;
+  line-height:1.7;
+  margin-bottom:44px;
+}
+
+/* BUTTON */
+.gold-btn{
+  display:inline-block;
+  background:#d4a93c;
+  color:#fff;
+  padding:16px 42px;
+  font-weight:600;
+  letter-spacing:2px;
+  text-decoration:none;
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+  .heritage-grid{
+    grid-template-columns:1fr;
+    gap:60px;
+  }
+
+  .heritage-content h3{
+    font-size:32px;
+  }
+}
+</style>
+
+<section class="testimonials">
+  <div class="testimonials-head">
+    <h2>Exceptional Service</h2>
+    <p>Over a decade of matching distinguished clients with extraordinary properties.</p>
+  </div>
+
+  <div class="testimonial-grid">
+
+    <!-- LEFT CARD -->
+    <div class="testimonial-card light">
+      <span class="label">EXCEPTIONAL SERVICE</span>
+
+      <div class="stars">★★★★★</div>
+
+      <p class="review">
+        The level of service exceeded all expectations. From initial consultation
+        through closing, every detail was handled with absolute precision.
+        Their exclusive network and deep market knowledge delivered outstanding
+        results in just ten days. This is premium real estate done right.
+      </p>
+
+      <hr>
+
+      <div class="author">
+        <img src="man1.webp" alt="">
+        <div>
+          <strong>Michael Harrison</strong>
+          <span>VENTURE CAPITALIST</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER CARD -->
+    <div class="testimonial-card dark">
+      <span class="label gold">FEATURED REVIEW</span>
+
+      <div class="stars gold">★★★★★</div>
+
+      <p class="review">
+        Moving from London to Miami required expertise I couldn’t find elsewhere.
+        From property tours through final documentation, everything was managed
+        flawlessly. Their international connections and local insights made my
+        transition seamless. Truly exceptional five-star service delivered.
+      </p>
+
+      <hr>
+
+      <div class="author">
+        <img src="women.webp" alt="">
+        <div>
+          <strong>Charlotte Williams</strong>
+          <span>INVESTMENT DIRECTOR</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT CARD -->
+    <div class="testimonial-card light">
+      <span class="label">TRUSTED EXCELLENCE</span>
+
+      <div class="stars">★★★★★</div>
+
+      <p class="review">
+        Three generations of my family have trusted this agency completely.
+        Their discretion remains absolute and market knowledge stays unmatched.
+        They consistently access exclusive off-market properties that others
+        simply cannot find. The gold standard in luxury real estate representation.
+      </p>
+
+      <hr>
+
+      <div class="author">
+        <img src="man2.webp" alt="">
+        <div>
+          <strong>Robert Chen</strong>
+          <span>EQUITY PARTNER</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<style>
+  .testimonials{
+  padding:120px 20px;
+  background:#fff;
+}
+
+.testimonials-head{
+  text-align:center;
+  margin-bottom:90px;
+}
+
+.testimonials-head h2{
+  font-size:48px;
+  font-weight:500;
+}
+
+.testimonials-head p{
+  font-size:18px;
+  color:#555;
+  margin-top:10px;
+}
+
+/* GRID */
+.testimonial-grid{
+  max-width:1300px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:40px;
+}
+
+/* CARD BASE */
+.testimonial-card{
+  padding:48px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+/* LIGHT CARD */
+.testimonial-card.light{
+  background:#fafafa;
+}
+
+/* DARK FEATURED */
+.testimonial-card.dark{
+  background:#1f1f1c;
+  color:#fff;
+}
+
+/* LABEL */
+.label{
+  font-size:12px;
+  letter-spacing:2px;
+  font-weight:600;
+  margin-bottom:18px;
+  display:block;
+}
+
+.label.gold{
+  color:#d4a93c;
+}
+
+/* STARS */
+.stars{
+  font-size:18px;
+  color:#d4a93c;
+  margin-bottom:26px;
+}
+
+/* REVIEW */
+.review{
+  font-size:16px;
+  line-height:1.7;
+  color:#555;
+}
+
+.testimonial-card.dark .review{
+  color:#ddd;
+}
+
+/* DIVIDER */
+.testimonial-card hr{
+  border:none;
+  border-top:1px solid rgba(0,0,0,.1);
+  margin:36px 0;
+}
+
+.testimonial-card.dark hr{
+  border-top:1px solid rgba(255,255,255,.15);
+}
+
+/* AUTHOR */
+.author{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.author img{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+}
+
+.author strong{
+  font-size:16px;
+  display:block;
+}
+
+.author span{
+  font-size:12px;
+  letter-spacing:1.5px;
+  color:#777;
+}
+
+.testimonial-card.dark .author span{
+  color:#aaa;
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+  .testimonial-grid{
+    grid-template-columns:1fr;
+  }
+
+  .testimonial-card{
+    padding:36px;
+  }
+}
+</style>
+<section class="stats-section">
+  <div class="stats-divider"></div>
+
+  <div class="stats-grid">
+    <div class="stat-box">
+      <h2 data-target="2500000000">$0</h2>
+      <p>TOTAL PORTFOLIO</p>
+    </div>
+
+    <div class="stat-box">
+      <h2 data-target="15">0+</h2>
+      <p>YEARS ACTIVE</p>
+    </div>
+
+    <div class="stat-box">
+      <h2 data-target="850">0+</h2>
+      <p>TOTAL SALES</p>
+    </div>
+
+    <div class="stat-box">
+      <h2 data-target="45200000">$0</h2>
+      <p>RECORD SALE</p>
+    </div>
+  </div>
+</section>
+<style>
+  .stats-section{
+  padding:90px 20px 120px;
+  background:#fff;
+}
+
+.stats-divider{
+  max-width:1200px;
+  margin:0 auto 70px;
+  border-top:1px solid #e5e5e5;
+}
+
+/* GRID */
+.stats-grid{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  text-align:center;
+  gap:30px;
+}
+
+/* NUMBER */
+.stat-box h2{
+  font-size:56px;
+  font-weight:500;
+  color:#d4a93c;
+  margin-bottom:14px;
+}
+
+/* LABEL */
+.stat-box p{
+  font-size:12px;
+  letter-spacing:2px;
+  font-weight:600;
+  color:#111;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .stats-grid{
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+
+  .stat-box h2{
+    font-size:42px;
+  }
+}
+
+@media(max-width:500px){
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style><script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const counters = document.querySelectorAll(".stat-box h2");
+  let started = false;
+
+  function formatValue(value, target){
+    if(target >= 1e9) return `$${(value/1e9).toFixed(1)}B+`;
+    if(target >= 1e6) return `$${(value/1e6).toFixed(1)}M`;
+    if(target >= 100) return Math.floor(value) + "+";
+    return Math.floor(value);
+  }
+
+  function startCounters(){
+    counters.forEach(counter=>{
+      const target = +counter.dataset.target;
+      let current = 0;
+      const increment = target / 120;
+
+      function update(){
+        current += increment;
+        if(current < target){
+          counter.innerText = formatValue(current, target);
+          requestAnimationFrame(update);
+        } else {
+          counter.innerText = formatValue(target, target);
+        }
+      }
+      update();
+    });
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting && !started){
+        started = true;
+        startCounters();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(document.querySelector(".stats-section"));
+
+});
+</script>
+
+<section class="why-choose">
+  <div class="why-head">
+    <h2>Why Choose Us</h2>
+    <p>Three core principles ensure you receive the exceptional service deserved.</p>
+  </div>
+
+  <div class="why-grid">
+
+    <!-- CARD 1 -->
+    <div class="why-card">
+      <div class="icon-circle">
+        <i class="fa fa-globe"></i>
+      </div>
+      <h3>Global Reach</h3>
+      <p>
+        Connect with elite professionals worldwide spanning architects to
+        closing attorneys.
+      </p>
+      <a href="404.html" class="gold-btn">DISCOVER SERVICES</a>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="why-card">
+      <div class="icon-circle">
+        <i class="fa fa-medal"></i>
+      </div>
+      <h3>Proven Excellence</h3>
+      <p>
+        Proven history of exceptional sales results featuring exclusive
+        unlisted property opportunities.
+      </p>
+      <a href="404.html" class="gold-btn">EXPLORE LISTINGS</a>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="why-card">
+      <div class="icon-circle">
+        <i class="fa fa-lock"></i>
+      </div>
+      <h3>Total Privacy</h3>
+      <p>
+        Complete discretion for high-profile clients protected with
+        confidentiality agreements.
+      </p>
+      <a href="404.html" class="gold-btn">CONTACT PRIVATELY</a>
+    </div>
+
+  </div>
+</section>
+<style>
+  /* WHY CHOOSE US */
+.why-choose{
+  padding:120px 20px;
+  background:#fafafa;
+}
+
+/* HEADER */
+.why-head{
+  text-align:center;
+  margin-bottom:80px;
+}
+
+.why-head h2{
+  font-size:52px;
+  font-weight:500;
+  margin-bottom:14px;
+  color:#111;
+}
+
+.why-head p{
+  font-size:18px;
+  color:#555;
+}
+
+/* GRID */
+.why-grid{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:40px;
+}
+
+/* CARD */
+.why-card{
+  background:#fff;
+  padding:60px 40px;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+  transition:all .4s ease;
+  opacity:1;
+  visibility:visible;
+}
+
+.why-card:hover{
+  transform:translateY(-12px);
+  box-shadow:0 35px 90px rgba(0,0,0,.14);
+}
+
+/* ICON */
+.icon-circle{
+  width:70px;
+  height:70px;
+  margin:0 auto 30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.icon-circle i{
+  font-size:42px;
+  color:#d4a93c;
+}
+
+/* TEXT */
+.why-card h3{
+  font-size:26px;
+  margin-bottom:16px;
+  color:#111;
+}
+
+.why-card p{
+  font-size:16px;
+  color:#666;
+  line-height:1.7;
+  margin-bottom:36px;
+}
+
+/* BUTTON */
+.gold-btn{
+  display:inline-block;
+  background:#d4a93c;
+  color:#fff;
+  padding:14px 34px;
+  font-size:13px;
+  letter-spacing:2px;
+  font-weight:600;
+  text-decoration:none;
+  transition:.3s ease;
+}
+
+.gold-btn:hover{
+  background:#c19a32;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .why-grid{
+    grid-template-columns:1fr;
+    gap:30px;
+  }
+
+  .why-head h2{
+    font-size:40px;
+  }
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.fromTo(".why-card",
+    { opacity: 0, y: 40 },
+    {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      stagger: 0.25,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".why-choose",
+        start: "top 75%",
+      }
+    }
+  );
+});
+</script>
+<section class="team-section">
+  <div class="team-head">
+    <h2>Your Dedicated Team</h2>
+    <p>Meet the specialists who redefine luxury real estate service excellence.</p>
+  </div>
+
+  <div class="team-grid">
+
+    <!-- MEMBER 1 -->
+    <div class="team-card">
+      <img src="man2.webp" alt="">
+      <div class="team-info">
+        <h3>Jacob Austin</h3>
+        <span class="role">PROPERTY CONSULTANT</span>
+        <p class="email">jacob@tangiblewp.com</p>
+        <p class="phone">(123) 345-6789</p>
+
+        <div class="socials">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBER 2 -->
+    <div class="team-card">
+      <img src="womenn.webp" alt="">
+      <div class="team-info">
+        <h3>Kate Hendricks</h3>
+        <span class="role">LUXURY ESTATE SPECIALIST</span>
+        <p class="email">kate@tangiblewp.com</p>
+        <p class="phone">(123) 345-6789</p>
+
+        <div class="socials">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBER 3 -->
+    <div class="team-card">
+      <img src="man1.webp" alt="">
+      <div class="team-info">
+        <h3>Ralph Davin</h3>
+        <span class="role">INVESTMENT ADVISOR</span>
+        <p class="email">ralph@tangiblewp.com</p>
+        <p class="phone">(123) 345-6789</p>
+
+        <div class="socials">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBER 4 -->
+    <div class="team-card">
+      <img src="women.webp" alt="">
+      <div class="team-info">
+        <h3>Sophia Kennith</h3>
+        <span class="role">CLIENT RELATIONS DIRECTOR</span>
+        <p class="email">sophia@tangiblewp.com</p>
+        <p class="phone">(123) 345-6789</p>
+
+        <div class="socials">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<style>
+  /* TEAM SECTION */
+.team-section{
+  padding:120px 20px;
+  background:#fafafa;
+}
+
+/* HEADER */
+.team-head{
+  text-align:center;
+  margin-bottom:80px;
+}
+
+.team-head h2{
+  font-size:52px;
+  font-weight:500;
+  margin-bottom:14px;
+}
+
+.team-head p{
+  font-size:18px;
+  color:#555;
+}
+
+/* GRID */
+.team-grid{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:40px;
+}
+
+/* CARD */
+.team-card{
+  background:#fff;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+  transition:.4s ease;
+}
+
+.team-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 35px 90px rgba(0,0,0,.14);
+}
+
+/* IMAGE */
+.team-card img{
+  width:100%;
+  height:320px;
+  object-fit:cover;
+}
+
+/* INFO */
+.team-info{
+  padding:30px;
+  text-align:center;
+}
+
+.team-info h3{
+  font-size:22px;
+  margin-bottom:8px;
+}
+
+.role{
+  display:block;
+  font-size:12px;
+  letter-spacing:2px;
+  font-weight:600;
+  color:#d4a93c;
+  margin-bottom:20px;
+}
+
+.email,
+.phone{
+  font-size:15px;
+  color:#333;
+  margin-bottom:6px;
+}
+
+/* SOCIAL */
+.socials{
+  margin-top:22px;
+  display:flex;
+  justify-content:center;
+  gap:14px;
+}
+
+.socials a{
+  width:38px;
+  height:38px;
+  border:1px solid #ddd;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#111;
+  transition:.3s;
+}
+
+.socials a:hover{
+  background:#d4a93c;
+  color:#fff;
+  border-color:#d4a93c;
+}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .team-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:600px){
+  .team-grid{
+    grid-template-columns:1fr;
+  }
+
+  .team-head h2{
+    font-size:40px;
+  }
+}
+</style>
+<script>
+gsap.fromTo(".team-card",
+  { opacity:0, y:40 },
+  {
+    opacity:1,
+    y:0,
+    duration:1,
+    stagger:.2,
+    ease:"power3.out",
+    scrollTrigger:{
+      trigger:".team-section",
+      start:"top 75%"
+    }
+  }
+);
+</script>
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>Ready to Begin Your Journey?</h2>
+    <p>Experience the difference of working with dedicated professionals.</p>
+
+    <a href="404.html" class="cta-btn">SCHEDULE CONSULTATION</a>
+  </div>
+</section>
+<style>
+  /* CTA SECTION */
+.cta-section{
+  background:#1c1c1a;
+  padding:120px 20px;
+}
+
+.cta-inner{
+  max-width:1100px;
+  margin:auto;
+  text-align:center;
+}
+
+/* TITLE */
+.cta-inner h2{
+  font-size:56px;
+  font-weight:500;
+  color:#eaeaea;
+  margin-bottom:18px;
+}
+
+/* SUBTEXT */
+.cta-inner p{
+  font-size:18px;
+  color:#9a9a9a;
+  margin-bottom:50px;
+}
+
+/* BUTTON */
+.cta-btn{
+  display:inline-block;
+  padding:18px 48px;
+  border:2px solid #d4a93c;
+  color:#d4a93c;
+  font-size:13px;
+  letter-spacing:2px;
+  font-weight:600;
+  text-decoration:none;
+  transition:.35s ease;
+}
+
+.cta-btn:hover{
+  background:#d4a93c;
+  color:#1c1c1a;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .cta-inner h2{
+    font-size:42px;
+  }
+
+  .cta-inner p{
+    font-size:16px;
+  }
+}
+
+@media(max-width:500px){
+  .cta-inner h2{
+    font-size:34px;
+  }
+}
+</style>
+<script>
+gsap.fromTo(".cta-inner",
+  { opacity:0, y:40 },
+  {
+    opacity:1,
+    y:0,
+    duration:1.2,
+    ease:"power3.out",
+    scrollTrigger:{
+      trigger:".cta-section",
+      start:"top 80%"
+    }
+  }
+);
+</script>
+<footer class="footer">
+  <div class="footer-inner">
+
+    <!-- BRAND -->
+    <div class="footer-col brand">
+      <div class="logo">
+        <img src="logo.webp" alt="Stackly Logo" class="footer-logo">
+      </div>
+
+      <p>
+        Discover leading properties and secure your dream home today.
+        Expert guidance at every step.
+      </p>
+
+      <ul class="contact">
+        <li>📞 91 70107 92745</li>
+        <li>📍MMR COMPLEX, SALEM, Tamil Nadu 636008 ·</li>
+        <li>✉ support@stackly.com</li>
+      </ul>
+    </div>
+
+    <!-- COMPANY -->
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="404.html">About Us</a></li>
+        <li><a href="404.html">Contact Us</a></li>
+        <li><a href="404.html">Our Team</a></li>
+        <li><a href="404.html">Blog</a></li>
+        <li><a href="404.html">Privacy Policy</a></li>
+      </ul>
+    </div>
+
+    <!-- PROPERTIES -->
+    <div class="footer-col">
+      <h4>Properties</h4>
+      <ul>
+        <li><a href="404.html">House</a></li>
+        <li><a href="404.html">Villa</a></li>
+        <li><a href="404.html">Penthouse</a></li>
+        <li><a href="404.html">Apartment</a></li>
+        <li><a href="404.html">Offices</a></li>
+      </ul>
+    </div>
+
+    <!-- CTA -->
+    <div class="footer-col talk">
+      <h4>Let's Talk</h4>
+      <p>
+        Book your private meeting with our luxury real estate experts today.
+      </p>
+      <a href="404.html" class="footer-btn">SCHEDULE NOW</a>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    <p>© 2026 Stackly. All rights reserved.</p>
+
+    <div class="footer-socials">
+  <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+  <a href="404.html"><i class="fab fa-x-twitter"></i></a>
+  <a href="404.html"><i class="fab fa-instagram"></i></a>
+  <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+  <a href="404.html"><i class="fab fa-youtube"></i></a>
+</div>
+
+  </div>
+</footer>
+<style>
+  /* FOOTER */
+.footer{
+  background:#1c1c1a;
+  color:#cfcfcf;
+  padding:90px 20px 30px;
+  font-family:inherit;
+}
+
+.footer-inner{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1.5fr;
+  gap:60px;
+}
+
+/* LOGO */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.logo-icon{
+  color:#d4a93c;
+  font-size:20px;
+}
+
+.logo-text{
+  font-size:22px;
+  font-weight:700;
+  color:#fff;
+}
+
+/* BRAND */
+.brand p{
+  font-size:15px;
+  line-height:1.7;
+  margin-bottom:20px;
+}
+
+.contact li{
+  list-style:none;
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+/* COLUMNS */
+.footer-col h4{
+  font-size:18px;
+  color:#fff;
+  margin-bottom:18px;
+}
+
+.footer-col ul{
+  padding:0;
+}
+
+.footer-col ul li{
+  list-style:none;
+  margin-bottom:12px;
+}
+
+.footer-col ul li a{
+  text-decoration:none;
+  color:#bdbdbd;
+  font-size:14px;
+  transition:.3s;
+}
+
+.footer-col ul li a:hover{
+  color:#d4a93c;
+}
+
+/* CTA */
+.talk p{
+  font-size:15px;
+  margin-bottom:22px;
+}
+
+.footer-btn{
+  display:inline-block;
+  padding:14px 34px;
+  border:2px solid #d4a93c;
+  color:#d4a93c;
+  text-decoration:none;
+  font-size:13px;
+  letter-spacing:2px;
+  transition:.3s;
+}
+
+.footer-btn:hover{
+  background:#d4a93c;
+  color:#1c1c1a;
+}
+
+/* BOTTOM */
+.footer-bottom{
+  max-width:1200px;
+  margin:60px auto 0;
+  padding-top:25px;
+  border-top:1px solid rgba(255,255,255,.1);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.footer-bottom p{
+  font-size:13px;
+  color:#888;
+}
+
+/* SOCIALS */
+.socials{
+  display:flex;
+  gap:14px;
+}
+
+.socials a{
+  width:38px;
+  height:38px;
+  border:1px solid rgba(255,255,255,.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  color:#fff;
+  text-decoration:none;
+  transition:.3s;
+}
+
+.socials a:hover{
+  background:#d4a93c;
+  color:#1c1c1a;
+  border-color:#d4a93c;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .footer-inner{
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+}
+
+@media(max-width:500px){
+  .footer-inner{
+    grid-template-columns:1fr;
+  }
+
+  .footer-bottom{
+    flex-direction:column;
+    gap:20px;
+    text-align:center;
+  }
+}
+.footer-logo{
+  max-width:160px;
+  height:auto;
+  margin-bottom:20px;
+}
+.footer-socials{
+  display:flex;
+  gap:14px;
+  justify-content:flex-end;
+}
+
+.footer-socials a{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:16px;
+  transition:.35s ease;
+}
+
+/* HOVER EFFECT */
+.footer-socials a:hover{
+  background:#d4a93c;
+  border-color:#d4a93c;
+  color:#000;
+  transform:translateY(-4px);
+}
+
+</style>

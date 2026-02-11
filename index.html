@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stackly Loading</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+height:100vh;
+background:radial-gradient(circle at center,#3a0909,#000);
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+}
+
+/* LOADER WRAP */
+
+.loader{
+text-align:center;
+animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:scale(.8);}
+to{opacity:1;transform:scale(1);}
+}
+
+/* LOGO */
+
+.loader img{
+width:160px;
+animation:pulse 1.6s infinite ease-in-out;
+filter:drop-shadow(0 0 20px #34ead6);
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.12);}
+100%{transform:scale(1);}
+}
+
+/* LOADING BAR */
+
+.loading-bar{
+width:260px;
+height:6px;
+background:#1b3d3d;
+border-radius:20px;
+overflow:hidden;
+margin:35px auto 12px;
+}
+
+.loading-fill{
+height:100%;
+width:0;
+background:linear-gradient(90deg,#c90000,#000000);
+animation:load 3s linear forwards;
+}
+
+@keyframes load{
+to{width:100%;}
+}
+
+/* TEXT */
+
+.loading-text{
+color:#b7ffff;
+letter-spacing:2px;
+font-size:14px;
+opacity:.9;
+animation:blink 1.5s infinite;
+}
+
+@keyframes blink{
+50%{opacity:.4;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader">
+
+<img src="logo.webp" alt="Stackly Logo">
+
+<div class="loading-bar">
+<div class="loading-fill"></div>
+</div>
+
+<div class="loading-text">LOADING...</div>
+
+</div>
+
+<script>
+setTimeout(()=>{
+window.location.href="home.html";  // change to your homepage
+},3200);
+</script>
+
+</body>
+</html>
+
+
